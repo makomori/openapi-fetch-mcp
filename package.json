@@ -1,0 +1,23 @@
+{
+  "name": "openapi-to-mcp",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/makomori/openapi-to-mcp.git"
+  },
+  "keywords": [
+    "openapi",
+    "mcp"
+  ],
+  "author": "makomori",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/makomori/openapi-to-mcp/issues"
+  },
+  "homepage": "https://github.com/makomori/openapi-to-mcp#readme"
+}
