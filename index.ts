@@ -2,6 +2,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerOpenApiToolsToMcpServer } from "./convertOpenApiToTools.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const server = new McpServer({
   name: "openapi2mcp",
@@ -10,9 +13,8 @@ const server = new McpServer({
 
 await registerOpenApiToolsToMcpServer({
   server,
-  openApiUrl:
-    "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml",
-  apiUrl: "https://pokeapi.co",
+  openApiUrl: process.env.OPENAPI_URL || "",
+  apiUrl: process.env.API_URL || "",
 });
 
 const transport = new StdioServerTransport();
