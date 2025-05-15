@@ -5,10 +5,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 const getOpenApiYmlFromUrl = async (url: string) => {
   try {
-    console.log("url", url);
     const res = await fetch(url);
     const text = await res.text();
-    console.log("text", text);
     const openApi = ymlParse(text) as OpenAPI.Document;
     return openApi;
   } catch (err) {
