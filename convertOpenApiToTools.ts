@@ -1,0 +1,112 @@
+import { parse as ymlParse } from "yaml";
+import type { OpenAPI } from "openapi-types";
+import { z } from "zod";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+
+const getOpenApiYmlFromUrl = async (url: string) => {
+  try {
+    console.log("url", url);
+    const res = await fetch(url);
+    const text = await res.text();
+    console.log("text", text);
+    const openApi = ymlParse(text) as OpenAPI.Document;
+    return openApi;
+  } catch (err) {
+    console.error("err", err);
+    return null;
+  }
+  // if (contentType.includes("yaml")) {
+  //   const openApi = ymlParse(await res.text()) as OpenAPI.Document;
+  //   return openApi;
+  // } else if (contentType.includes("json")) {
+  //   const openApi = (await res.json()) as OpenAPI.Document;
+  //   return openApi;
+  // } else {
+  //   throw new Error(
+  //     "OpenAPIドキュメントのContent-Typeが不正です: " + contentType
+  //   );
+  // }
+};
+
+const getRequest = (
+  path: string,
+  params: Record<string, any>,
+  apiUrl: string
+) => {
+  let urlPath = path;
+  const paramsCopy = { ...params };
+  urlPath = urlPath.replace(/\{([^}]+)\}/g, (_, key) => {
+    const value = paramsCopy[key];
+    delete paramsCopy[key];
+    return encodeURIComponent(value);
+  });
+  const url = new URL(apiUrl + urlPath);
+  Object.entries(paramsCopy).forEach(([key, value]) => {
+    if (value !== undefined) url.searchParams.append(key, String(value));
+  });
+  return fetch(url.toString());
+};
+
+function convertParametersToZodSchema(
+  parameters: OpenAPI.Parameters | undefined
+): z.ZodObject<any> {
+  const shape: Record<string, any> = {};
+  for (const param of parameters ?? []) {
+    if ("$ref" in param) continue;
+    const { name, required, schema } = param;
+    if (!name) continue;
+    let zodType: z.ZodString | z.ZodNumber | z.ZodBoolean | z.ZodAny = z.any();
+    if (schema?.type === "string") zodType = z.string();
+    if (schema?.type === "number" || schema?.type === "integer")
+      zodType = z.number();
+    if (schema?.type === "boolean") zodType = z.boolean();
+    shape[name] = required ? zodType : zodType.optional();
+  }
+  return z.object(shape);
+}
+
+export const registerOpenApiToolsToMcpServer = async ({
+  server,
+  openApiUrl,
+  apiUrl,
+}: {
+  server: McpServer;
+  openApiUrl: string;
+  apiUrl: string;
+}) => {
+  const openApi = await getOpenApiYmlFromUrl(openApiUrl);
+  if (!openApi) {
+    throw new Error("OpenAPIドキュメントが取得できませんでした");
+  }
+  for (const path in openApi.paths) {
+    const pathItem = openApi.paths[path]?.get;
+    if (!pathItem) {
+      continue;
+    }
+    const { operationId, summary, description, parameters } = pathItem;
+    if (!operationId) {
+      continue;
+    }
+    const toolId = operationId
+      .replace(/_([a-zA-Z0-9])/g, (_, c) => c.toUpperCase())
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .trim();
+    const inputSchema = convertParametersToZodSchema(parameters);
+    server.tool(
+      toolId,
+      description ?? summary ?? "",
+      inputSchema.shape,
+      async (args: Record<string, any>, extra: any) => {
+        const res = await getRequest(path, args, apiUrl);
+        let json: any;
+        try {
+          json = await res.json();
+          return { content: [{ type: "text", text: JSON.stringify(json) }] };
+        } catch (e) {
+          const text = await res.text();
+          return { content: [{ type: "text", text }] };
+        }
+      }
+    );
+  }
+};
