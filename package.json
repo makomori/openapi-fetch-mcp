@@ -1,13 +1,14 @@
 {
   "name": "openapi-fetch-mcp",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "test": "test",
-    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js"
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
