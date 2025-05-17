@@ -90,7 +90,7 @@ export const registerOpenApiToolsToMcpServer = async ({
   customHeaders?: Record<string, string>;
   openApiFilePath?: string;
 }) => {
-  let openApi = await getOpenApiYmlFromUrl(openApiUrl);
+  let openApi = openApiUrl ? await getOpenApiYmlFromUrl(openApiUrl) : null;
   if (!openApi && openApiFilePath) {
     openApi = getOpenApiYmlFromFile(openApiFilePath);
   }
@@ -103,10 +103,7 @@ export const registerOpenApiToolsToMcpServer = async ({
       continue;
     }
     const { operationId, summary, description, parameters } = pathItem;
-    if (!operationId) {
-      continue;
-    }
-    const toolId = operationId
+    const toolId = (operationId ?? path)
       .replace(/_([a-zA-Z0-9])/g, (_, c) => c.toUpperCase())
       .replace(/[^a-zA-Z0-9]/g, "")
       .trim();
