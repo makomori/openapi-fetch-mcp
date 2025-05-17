@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerOpenApiToolsToMcpServer } from "./convertOpenApiToTools.js";
+import { registerOpenApiToolsToMcpServer } from "./registerOpenApiToolsToMcpServer";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const server = new McpServer({
-  name: "openapi2mcp",
+  name: "openapi-mcp-fetch",
   version: "0.1.0",
 });
 

@@ -14,17 +14,6 @@ const getOpenApiYmlFromUrl = async (url: string) => {
     console.error("err", err);
     return null;
   }
-  // if (contentType.includes("yaml")) {
-  //   const openApi = ymlParse(await res.text()) as OpenAPI.Document;
-  //   return openApi;
-  // } else if (contentType.includes("json")) {
-  //   const openApi = (await res.json()) as OpenAPI.Document;
-  //   return openApi;
-  // } else {
-  //   throw new Error(
-  //     "OpenAPIドキュメントのContent-Typeが不正です: " + contentType
-  //   );
-  // }
 };
 
 const getOpenApiYmlFromFile = (filePath: string) => {
