@@ -1,6 +1,6 @@
 {
   "name": "openapi-fetch-mcp",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/makomori/openapi-mcp-fetch"
+    "url": "https://github.com/makomori/openapi-fetch-mcp"
   },
   "keywords": [
     "openapi",
@@ -20,9 +20,9 @@
   "author": "makomori",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/makomori/openapi-mcp-fetch/issues"
+    "url": "https://github.com/makomori/openapi-fetch-mcp/issues"
   },
-  "homepage": "https://github.com/makomori/openapi-mcp-fetch#readme",
+  "homepage": "https://github.com/makomori/openapi-fetch-mcp#readme",
   "type": "module",
   "devDependencies": {
     "@types/node": "^22.15.18",
@@ -36,6 +36,6 @@
     "yaml": "^2.7.1"
   },
   "bin": {
-    "openapi-mcp-fetch": "dist/index.js"
+    "openapi-fetch-mcp": "dist/index.js"
   }
 }

@@ -21,7 +21,7 @@ npm install -g openapi-fetch-mcp
 ```bash
 OPENAPI_URL="https://example.com/openapi.yaml" \
 API_URL="https://example.com/api" \
-openapi-mcp-fetch
+openapi-fetch-mcp
 ```
 
 ローカルファイルを使う場合:
@@ -29,7 +29,7 @@ openapi-mcp-fetch
 ```bash
 OPENAPI_FILE_PATH="./openapi.yaml" \
 API_URL="https://example.com/api" \
-openapi-mcp-fetch
+openapi-fetch-mcp
 ```
 
 ### 環境変数

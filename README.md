@@ -23,7 +23,7 @@ Set the required environment variables and run the CLI:
 ```bash
 OPENAPI_URL="https://example.com/openapi.yaml" \
 API_URL="https://example.com/api" \
-openapi-mcp-fetch
+openapi-fetch-mcp
 ```
 
 Or with a local file:
@@ -31,7 +31,7 @@ Or with a local file:
 ```bash
 OPENAPI_FILE_PATH="./openapi.yaml" \
 API_URL="https://example.com/api" \
-openapi-mcp-fetch
+openapi-fetch-mcp
 ```
 
 ### Environment Variables

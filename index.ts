@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const server = new McpServer({
-  name: "openapi-mcp-fetch",
+  name: "openapi-fetch-mcp",
   version: "0.1.0",
 });
 
