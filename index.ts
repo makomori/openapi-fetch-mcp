@@ -15,6 +15,10 @@ await registerOpenApiToolsToMcpServer({
   server,
   openApiUrl: process.env.OPENAPI_URL || "",
   apiUrl: process.env.API_URL || "",
+  customHeaders: process.env.CUSTOM_HEADERS
+    ? JSON.parse(process.env.CUSTOM_HEADERS)
+    : undefined,
+  openApiFilePath: process.env.OPENAPI_FILE_PATH || undefined,
 });
 
 const transport = new StdioServerTransport();

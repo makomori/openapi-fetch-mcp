@@ -2,6 +2,7 @@ import { parse as ymlParse } from "yaml";
 import type { OpenAPI } from "openapi-types";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import fs from "fs";
 
 const getOpenApiYmlFromUrl = async (url: string) => {
   try {
@@ -26,10 +27,22 @@ const getOpenApiYmlFromUrl = async (url: string) => {
   // }
 };
 
+const getOpenApiYmlFromFile = (filePath: string) => {
+  try {
+    const text = fs.readFileSync(filePath, "utf-8");
+    const openApi = ymlParse(text) as OpenAPI.Document;
+    return openApi;
+  } catch (err) {
+    console.error("err", err);
+    return null;
+  }
+};
+
 const getRequest = (
   path: string,
   params: Record<string, any>,
-  apiUrl: string
+  apiUrl: string,
+  customHeaders?: Record<string, string>
 ) => {
   let urlPath = path;
   const paramsCopy = { ...params };
@@ -42,7 +55,8 @@ const getRequest = (
   Object.entries(paramsCopy).forEach(([key, value]) => {
     if (value !== undefined) url.searchParams.append(key, String(value));
   });
-  return fetch(url.toString());
+  const headers = customHeaders || {};
+  return fetch(url.toString(), { headers });
 };
 
 function convertParametersToZodSchema(
@@ -67,14 +81,21 @@ export const registerOpenApiToolsToMcpServer = async ({
   server,
   openApiUrl,
   apiUrl,
+  customHeaders,
+  openApiFilePath,
 }: {
   server: McpServer;
   openApiUrl: string;
   apiUrl: string;
+  customHeaders?: Record<string, string>;
+  openApiFilePath?: string;
 }) => {
-  const openApi = await getOpenApiYmlFromUrl(openApiUrl);
+  let openApi = await getOpenApiYmlFromUrl(openApiUrl);
+  if (!openApi && openApiFilePath) {
+    openApi = getOpenApiYmlFromFile(openApiFilePath);
+  }
   if (!openApi) {
-    throw new Error("OpenAPIドキュメントが取得できませんでした");
+    throw new Error("Could not get OpenAPI document");
   }
   for (const path in openApi.paths) {
     const pathItem = openApi.paths[path]?.get;
@@ -95,7 +116,9 @@ export const registerOpenApiToolsToMcpServer = async ({
       description ?? summary ?? "",
       inputSchema.shape,
       async (args: Record<string, any>, extra: any) => {
-        const res = await getRequest(path, args, apiUrl);
+        const { customHeaders: argHeaders, ...restArgs } = args;
+        const headers = argHeaders || customHeaders;
+        const res = await getRequest(path, restArgs, apiUrl, headers);
         let json: any;
         try {
           json = await res.json();
