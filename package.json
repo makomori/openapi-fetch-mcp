@@ -1,6 +1,6 @@
 {
   "name": "openapi-fetch-mcp",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -37,5 +37,8 @@
   },
   "bin": {
     "openapi-fetch-mcp": "dist/index.js"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
