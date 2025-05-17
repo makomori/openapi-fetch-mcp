@@ -1,50 +1,58 @@
 # openapi-fetch-mcp
 
-OpenAPIのエンドポイントをModel Context Protocol (MCP)ツールとして登録するCLIツールです。
+OpenAPIエンドポイントをModel Context Protocol（MCP）ツールとして登録するCLIツールです。CursorなどのMCPクライアントを通じてAPIリクエストを実行できます。
 
 ## 特徴
 
-- OpenAPI YAMLをURLまたはローカルファイルから取得
-- 各GETエンドポイントをMCPツールとして登録
-- カスタムヘッダーや環境変数による柔軟な設定
+- URLまたはローカルファイルからOpenAPI YAMLを取得（現在はYAML形式のみ対応）
+- 各**GET**エンドポイントをMCPツールとして登録（安全性のためGETリクエストのみ対応）
+- カスタムヘッダーや環境変数の設定に対応
 
-## インストール
-
-```bash
-npm install -g openapi-fetch-mcp
+## Cursor MCP設定
+### ローカルのOpenAPI仕様書を使う場合
+```json
+    "openapi-fetch-mcp": {
+      "command": "npx",
+      "args": ["openapi-fetch-mcp"],
+      "env": {
+        "API_URL": "https://your-api-url.com",
+        "CUSTOM_HEADERS": "{\"X-Your-Api-Key\":\"xxxxxxxxx\"}",
+        "OPENAPI_FILE_PATH": "/FULL_PATH_TO_OPEN_API_YAML_FILE"
+      }
+    }
 ```
 
-## 使い方
-
-必要な環境変数を設定してCLIを実行します。
-
-```bash
-OPENAPI_URL="https://example.com/openapi.yaml" \
-API_URL="https://example.com/api" \
-openapi-fetch-mcp
-```
-
-ローカルファイルを使う場合:
-
-```bash
-OPENAPI_FILE_PATH="./openapi.yaml" \
-API_URL="https://example.com/api" \
-openapi-fetch-mcp
+### リモートのOpenAPI仕様書を使う場合
+```json
+    "openapi-fetch-mcp": {
+      "command": "npx",
+      "args": ["openapi-fetch-mcp"],
+      "env": {
+        "API_URL": "https://your-api-url.com",
+        "CUSTOM_HEADERS": "{\"X-Your-Api-Key\":\"xxxxxxxxx\"}",
+        "OPENAPI_URL": "https://your-open-api-url.com"
+      }
+    }
 ```
 
 ### 環境変数
 
-- `OPENAPI_URL`: OpenAPI YAMLファイルのURL（`OPENAPI_FILE_PATH`使用時は不要）
-- `OPENAPI_FILE_PATH`: ローカルのOpenAPI YAMLファイルのパス（`OPENAPI_URL`使用時は不要）
+- `OPENAPI_URL`: OpenAPI YAMLファイルのURL（`OPENAPI_FILE_PATH`を使う場合は省略可）
+- `OPENAPI_FILE_PATH`: ローカルのOpenAPI YAMLファイルのパス（`OPENAPI_URL`を使う場合は省略可）
 - `API_URL`: APIサーバーのベースURL
-- `CUSTOM_HEADERS`: (任意) カスタムヘッダーのJSON文字列 例: `'{"Authorization":"Bearer ..."}'`
+- `CUSTOM_HEADERS`: （任意）カスタムヘッダー用のJSON文字列 例: '{"Authorization":"Bearer ..."}'
 
-## 開発
+## 例（PokeAPIを利用）
 
-```bash
-npm install
-npm run build
-npm run type-check
+```json
+    "openapi-fetch-mcp": {
+      "command": "npx",
+      "args": ["openapi-fetch-mcp"],
+      "env": {
+        "OPENAPI_URL": "https://raw.githubusercontent.com/PokeAPI/pokeapi/refs/heads/master/openapi.yml",
+        "API_URL": "https://pokeapi.co"
+      }
+    }
 ```
 
 ## ライセンス
@@ -53,4 +61,6 @@ MIT
 
 ## 作者
 
-makomori 
+makomori
+
+[English](./README.md) 

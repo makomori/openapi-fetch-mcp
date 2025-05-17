@@ -45,9 +45,9 @@ A CLI tool to register OpenAPI endpoints as Model Context Protocol (MCP) tools. 
 ## Example (Using PokeAPI)
 
 ```json
-    "openapi2mcp": {
+    "openapi-fetch-mcp": {
       "command": "npx",
-      "args": ["openapi2mcp"],
+      "args": ["openapi-fetch-mcp"],
       "env": {
         "OPENAPI_URL": "https://raw.githubusercontent.com/PokeAPI/pokeapi/refs/heads/master/openapi.yml",
         "API_URL": "https://pokeapi.co"
