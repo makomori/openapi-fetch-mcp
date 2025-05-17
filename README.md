@@ -1,6 +1,7 @@
 # openapi-fetch-mcp
-
 A CLI tool to register OpenAPI endpoints as Model Context Protocol (MCP) tools. You can make API requests through an MCP client such as Cursor.
+
+https://github.com/user-attachments/assets/b8f7e7f9-ca8f-475a-84fc-609e03c7ae96
 
 ## Features
 
